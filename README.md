@@ -1,8 +1,8 @@
-################################################### GAN-APG ##############################################################
+# GAN-APG
 
-Generative Adversarial Networks for Automatic Patch Generation
+## Generative Adversarial Networks for Automatic Patch Generation
 
-author: Brad Baker
+## author: Brad Baker
 
 Running 'make' will untar all of the files in the directory
 Note that the data.tar.gz file contains a lot of files, since it now tracks some of the preprocessing
@@ -54,3 +54,5 @@ To regenerate the figure included in the paper, run
 	python clfsuite_plot.py
 
 you will need the seaborn, matplotlib, and pandas libraries to run the plotting script.
+
+[embed]https://github.com/bbradt/GAN-APG/blob/master/seqgan-apg-sequential.pdf[/embed]
