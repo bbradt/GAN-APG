@@ -3,7 +3,7 @@
 **AUTHOR: Brad Baker**
 **CONTACT: bbaker (AT) mrn.org**
 
-##Generative Adversarial Networks for Automatic Patch Generation**
+## Generative Adversarial Networks for Automatic Patch Generation
 
 Running 'make' will untar all of the files in the directory
 Note that the data.tar.gz file contains a lot of files, since it now tracks some of the preprocessing
