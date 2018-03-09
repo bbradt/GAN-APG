@@ -1,0 +1,39 @@
+\documentclass{article}
+
+\usepackage{booktabs} % For formal tables
+
+\usepackage[ruled]{algorithm2e} % For algorithms
+\usepackage{url}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+
+
+% Document starts
+\begin{document}
+% Title portion. Note the short title for running heads 
+\title{Generative Adversarial Networks for Automated  Patch Generation}  
+
+\author{Brad Baker}
+
+\maketitle
+
+\section{Project Proposal}
+
+As software systems grow in size and complexity, the task of manual debugging consumes more time in the development cycle, and opens up to more serious and frequent human error. So far in 2017, Mozilla has verified 576 newly reported bugs for the Firefox web-browser \cite{FirefoxBugdays}, a complex piece of software containing nearly 18 million lines of code \cite{FirefoxOpen}. Though many discovered bugs may only affect the system at a superficial level, some faults can expose serious security vulnerabilities, and thus require immediate attention and resolution - an often tall order in large and complex software systems. In the past decade, researchers have thus begun to turn toward automatic bug-detection and repair in an effort to address the rising difficulties of manual debugging \cite{arcuri2008automation}; however, few of the proposed methods have made use of recent advances in machine learning and artificial intelligence in order to leverage information regarding software structure, history, or other relevant data.
+
+The problem of automatic bug repair can be divided into a number of sub-problems: "failure detection (something wrong has happened), bug diagnosis (why this has happened), fault localization (what the root cause is), [and] repair inference (what should be done to fix the problem)" \cite{monperrus2014critical}. In addition to this taxonomy, "repair inference" can be extended to include "patch generation"\footnote{These methods often target security-related goals \cite{cui2007shieldgen,sidiroglou2005countering}} if the final product of the model is a full software patch intended to produce a concrete resolution for a bug or set of bugs within software. In the past, many researchers have approached each of these sub-problems individually (see, for example \cite{monperrus2015automatic,dallmeier2007extraction,kim2006automatic,liu2005sober,lukins2010bug}), while some frameworks attempt to address multiple problems at once, often performing both localization and repair (e.g. \cite{long2016automatic}). Historically, repair inference has perhaps most frequently been addressed using genetic programs (\cite{forrest2009genetic,arcuri2008novel,le2012genprog,le2013automatic,weimer2010automatic,kim2013automatic}), although a number of other approaches utilize other methods such as solving problems in Satisfiability Modulo Theory  \cite{demarco2014automatic,xuan2017nopol}, or semantic analysis \cite{nguyen2013semfix}. Most recently, some state of the art methods have taken some first steps into data mining \cite{le2016history} and even some basic probabilistic methods \cite{long2016automatic}; however, the problem of bug repair via patch generation has been largely untouched by machine-learning, and thus deserves further exploration.
+
+The proposed project will center around the application of  a "Generative Adversarial Network" (GAN) \cite{goodfellow2014generative}, which will utilize multiple Neural Nets (or perhaps Multi-Layer Perceptrons) to perform the task of patch generation by way of the individual networks within the framework. First of all, the GAN will include one discriminative model tasked with bug detection, i.e. performing supervised binary classification of trained on labeled "bug" and "non-bug" code samples. The second, generative model will then learn, under certain syntactic and functional constraints, how to generate "patches", or in other words, how to generate samples which the discriminative model will label as "non-bug" instances. The hope is that the constrained generative model, while attempting to directly generate "non-bug" code (i.e. patches), will also implicitly address the problems of bug localization and diagnosis by learning which localized changes will correspond with correctly patched code.The two models working together should be able to produce set of patches for a given set of test code, and if the models fit properly, could offer more robust and flexible solutions to the problem of patch generation. Some of the underlying assumptions of this approach are that 1) the binary discriminative model will be able to 
+capture a sufficiently complex decision boundary for different \textit{types} of bugs\footnote{This assumption could possibly be circumvented by shifting the binary discriminative model to a multi-class classification.}, 2) the generative model 
+can learn sufficiently complex patch features under syntactical and functional constraints, and 3) that the discriminative and generative models can sufficiently generalize beyond the given training set\footnote{Creating a model which properly generalizes to the problem is recognized as a difficult task for most automatic bug repair frameworks \cite{le2013current,smith2015cure}.}.
+
+A number of open-source, benchmark data sets exist which could be used to test the GAN \cite{just2014defects4j,berlin2017bug,tan2017codeflaws,le2015manybugs}, but in theory, data could also be mined from Github, or another version-control repository, where the existence of bugs, and perhaps their patches, are clearly labeled. Data sets could in principle contain entire programs, code-snippets, or patches as instances, where each instance is labeled as containing a bug or not; however, which features are used by each model will need to be engineered. In the event that the full GAN cannot be implemented, it is possible the discriminative model could still provide a novel application of Neural Networks to bug detection.
+
+The final product for this project should be a piece of software which implements the GAN and performs a number of tests on the selected benchmark data set, along with a technical write-up which will serve as a draft for an eventual publishable research paper. 
+
+\section{Underlying Motivations}
+
+I have done previous research both on machine learning in privacy-sensitive scenarios, and on recommender systems for software engineering. This project provides an interesting intersection in both those fields, while providing a more focused exploration into a scenario particularly important to software security. Generative Adversarial Networks are seeing wide application in a number of domains where the generative part of the network can be used either to strengthen a certain kind of discriminative model, or generate a particularly interesting kind of sample, and I am interested in applying these kinds of models to my research with the Mind Research Network.
+\bibliographystyle{acm}
+\bibliography{project_proposal.baker}
+
+\end{document}
