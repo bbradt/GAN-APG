@@ -55,4 +55,8 @@ To regenerate the figure included in the paper, run
 
 you will need the seaborn, matplotlib, and pandas libraries to run the plotting script.
 
-[embed]https://github.com/bbradt/GAN-APG/blob/master/seqgan-apg-sequential.pdf [/embed]
+<object data="https://github.com/bbradt/GAN-APG/blob/master/seqgan-apg-sequential.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/bbradt/GAN-APG/blob/master/seqgan-apg-sequential.pdf">
+        This browser does not support PDFs. Please download the PDF to view it: <a href="http://yoursite.com/the.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
