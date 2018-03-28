@@ -3,7 +3,8 @@ import ganapg_vocabulary as gvoc
 import ganapg_preprocess_ast as gast
 import ganapg_config as cfg
 
-class Pipeline():
+
+class PreprocPipeline():
 
     default_steps = ['obfuscate',
                      'symbols',
@@ -14,8 +15,9 @@ class Pipeline():
 
     default_data_dir = '/home/bbradt/AGAN/data/codeflaws/'
 
-    def __init__(self, method='cf_tokens_seqgan'):
+    def __init__(self, method='cf_tokens_seqgan', data_dir=default_data_dir):
         self.m = getattr(cfg, method)
+        self.data_dir = data_dir
 
     def run(self):
         #  Run with default parameters for codeflaws with seqgan
@@ -48,9 +50,11 @@ class Pipeline():
             elif step is 'astseq':
                 print('Generating AST sequences')
                 gast.cfiles_to_nodesequences(data_dir=self.method['data_dir'],
-                                    save_dir=self.method['save_dirs'][step],
-                                    save=self.method['save'])
-                
+                                             save_dir=self.method['save_dirs']
+                                             [step],
+                                             save=self.method['save'])
+
+
 if __name__ == '__main__':
     PP = PreprocPipeline()
     PP.cf_run()

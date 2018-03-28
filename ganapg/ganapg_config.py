@@ -7,6 +7,8 @@ Config file for GANAPG file
 """
 
 CODEFLAWS_DIR = '../data/codeflaws/'
+CGC_DIR = '../data/cgc-challenge-corpus/'
+CGC_SAVE = '../data/cgc_compiled/'
 SEQGAN_DIR = '../SeqGAN'
 SEQ2SEQ_DIR = '../seq2seq'
 MARKOV_DIR = ''
@@ -16,6 +18,7 @@ ALL_STEPS = ['astseq',
              'obfuscate',
              'symbols',
              'posneg',
+             'cgc-posneg',
              'vocabgen',
              'vocabhash',
              'seqgan',
@@ -24,6 +27,43 @@ ALL_STEPS = ['astseq',
              'seqtok',
              'markov']
 
+name = 'cgc_tokens'
+cgc_tokens = {'name': name,
+              'steps': ['obfuscate',
+                        'cgc-posneg',
+                        'symbols',
+                        'vocabgen',
+                        'vocabhash'],
+              'data_dir': CGC_DIR,
+              'save': True,
+              'save_dir': {k: '%s/%s_%s/' % (CGC_SAVE, name, k)
+                           for k in ALL_STEPS},
+              'vocab': '%s/%s_vocabgen/vocab.txt' % (CGC_SAVE, name),
+              'config': None,
+              'run': '%s/sequence_gan.py' % SEQGAN_DIR,
+              'eval': None,
+              'pos': 'pos.hash',
+              'neg': 'neg.hash'
+              }
+
+name = 'cgc_ast'
+cgc_ast = {'name': name,
+           'steps': ['obfuscate',
+                     'cgc-posneg',
+                     'symbols',
+                     'vocabgen',
+                     'vocabhash'],
+           'data_dir': CGC_DIR,
+           'save': True,
+           'save_dir': {k: '%s/%s_%s/' % (CGC_SAVE, name, k)
+                        for k in ALL_STEPS},
+           'vocab': '%s/%s_vocabgen/vocab.txt' % (CGC_SAVE, name),
+           'config': None,
+           'run': '%s/sequence_gan.py' % SEQGAN_DIR,
+           'eval': None,
+           'pos': 'pos.hash',
+           'neg': 'neg.hash'
+           }
 
 name = 'cf_tokens_seqgan'
 cf_tokens_seqgan = {'name': name,

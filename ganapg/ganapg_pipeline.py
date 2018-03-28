@@ -3,8 +3,8 @@ import ganapg_vocabulary as gvoc
 from ganapg_util import query_yes_no, py3
 import ganapg_preprocess_ast as gast
 import ganapg_config as cfg
-if py3():
-    from ganapg_pymarkov import Ganapg_Markov
+#if py3():
+#    from ganapg_pymarkov import Ganapg_Markov
 import subprocess as sp
 import os
 import sys
@@ -33,23 +33,30 @@ class Pipeline():
 
     """
 
-    def __init__(self, method='cf_ast_seqgan', skip=[]):
+    def __init__(self, method='cf_ast_seqgan', skip=[], data_dir=None,
+                 save_dir=None):
         print('Running model %s' % method)
         self.meth = getattr(cfg, method)
         self.data_dir = self.meth['data_dir']
+        self.save_dir = None
+        if data_dir is not None:
+            self.data_dir = data_dir
+            self.meth['data_dir'] = data_dir
+        if save_dir is not None:
+            self.save_dir = save_dir
         self.meth['steps'] = [s for s in self.meth['steps'] if s not in skip]
         self.extension = None
+
     def run(self):
         for step in self.meth['steps']:
-            save_dir = self.meth['save_dir'][step]
+            if not self.save_dir:
+                save_dir = self.meth['save_dir'][step]
+            else:
+                save_dir = self.save_dir
             save = self.meth['save']
             if step is 'obfuscate':
                 print('Obfuscating cfiles')
                 self.extension = '.obfs'
-                if not query_yes_no("Are you sure you want to re-obfuscate?"
-                                    " It will take a few seconds longer than"
-                                    " the other steps."):
-                    continue
                 gtok.obfuscate_cfiles(data_dir=self.data_dir,
                                       recurse=1, save_dir=None,
                                       save=save)
@@ -57,21 +64,19 @@ class Pipeline():
             elif step is 'symbols':
                 print('Converting symbols to tokens')
                 self.extension = '.nosym'
-                if os.path.exists(save_dir):
-                    if not query_yes_no("Looks like this data has already been"
-                                        " generated. Rebuild?"):
-                        self.data_dir = save_dir if save_dir else '.'
-                        continue
                 gtok.convert_cfiles_symbols(data_dir=self.data_dir,
                                             save_dir=save_dir,
                                             save=save)
                 self.data_dir = save_dir if save_dir else '.'
             elif step is 'posneg':
                 print('Creating positive/negative splits')
-                if not query_yes_no("Looks like this data has already been "
-                                    "generated. Rebuild?"):
-                    self.data_dir = save_dir if save_dir else '.'
-                    continue
+                gtok.codeflaws_posneg(data_dir=self.data_dir,
+                                      save_dir=save_dir,
+                                      extension=self.extension,
+                                      save=save)
+                self.data_dir = save_dir if save_dir else '.'
+            elif step is 'cgc-posneg':
+                print('Creating positive/negative splits')
                 gtok.codeflaws_posneg(data_dir=self.data_dir,
                                       save_dir=save_dir,
                                       extension=self.extension,
@@ -79,16 +84,13 @@ class Pipeline():
                 self.data_dir = save_dir if save_dir else '.'
             elif step is 'vocabgen':
                 print('Generating vocabulary')
+                print(self.meth['vocab'], self.data_dir)
                 gvoc.generate_vocab_to_file(data_dir=self.data_dir,
                                             vocab_filename=cfg.BASE_VOCAB,
                                             out_filename=self.meth['vocab'])
             elif step is 'vocabhash':
                 self.extension = '.hash'
                 print('Hashing codeflaws files')
-                if not query_yes_no("Looks like this data has already been "
-                                    "generated. Rebuild?"):
-                    self.data_dir = save_dir if save_dir else '.'
-                    continue
                 vocabfile = self.meth['vocab']
                 gvoc.hash_files(data_dir=self.data_dir,
                                 vocabfile=vocabfile,
@@ -97,18 +99,12 @@ class Pipeline():
                 self.data_dir = save_dir if save_dir else '.'
             elif step is 'astseq':
                 print('Generating AST sequences')
-                if not query_yes_no("Looks like this data has already been "
-                                    "generated. Rebuild?"):
-                    continue
                 gast.cfiles_to_nodesequences(data_dir=self.data_dir,
                                              save_dir=None,
                                              save=save, recurse=0)
             elif step is 'seqtok':
                 self.extension = '.seq.hash'
                 print('Generating AST tokens')
-                if not query_yes_no("Looks like this data has already been "
-                                    "generated. Rebuild?"):
-                    continue
                 _, v = gast.nodesequences_to_tokens(data_dir=self.data_dir,
                                                     save_dir=None,
                                                     save=save)

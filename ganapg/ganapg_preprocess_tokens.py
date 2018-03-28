@@ -176,6 +176,26 @@ def codeflaws_posneg(header='', data_dir='.', extension='.obfs', save=True,
     return posdata, negdata
 
 
+def cgc_posneg(header='', data_dir='.', extension='.obfs', save=True,
+               recurse=0, save_dir=None, posfile='pos', negfile='neg'):
+    """
+        This preprocessing function uses the cgc directory README scheme
+        to split files into separate data sets of positive and negative
+        samples.
+
+        We assume no recursion is required, i.e. data_dir points directly to
+        the codeflaws directory.
+
+        We assume there are two .txt files in the direcotry
+
+        pos_labels.txt - with the positive CWE labels
+        neg_labels.txt - with the negative CWE labels
+    """
+    posdata = []
+    negdata = []
+    return posdata, negdata
+
+
 def convert_cfiles_symbols(data_dir='.', out_extension='.nosym', save=False,
                            save_dir=None, in_extension='',
                            symbol_json_filename="C_SYMBOL_MAP.json",
